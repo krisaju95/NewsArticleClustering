@@ -9,21 +9,22 @@ from nltk.corpus import stopwords
 
 
 path = "C:\Users\Akshay-PC\Desktop\Articles"
+path1 = "C:\Users\Akshay-PC\Desktop"
 count = 0
 sw = set()
 sw = stopwords.words('english')
 
+# Creates a Python Set containing all the words found in the documents in path excluding stop words
 def isOnlyStr(str):
     for char in str:
         if not char.isalpha():
             return False
             break
     return True
-
-# Creates a Python Set containing all the words found in the documents in path excluding stop words
-        
-def preprocess(sent):
-        f = open("C:\Users\Akshay-PC\Desktop\\Wordset.txt", "a")
+               
+def preprocess(sent, filename):
+        f = open(os.path.join(path1, 'Wordset.txt'), "a")
+        f1 = open(filename, 'w')
 	sent = sent.lower()
 	tokenizer = RegexpTokenizer(r'\w+')
 	tokens = tokenizer.tokenize(sent)
@@ -31,12 +32,13 @@ def preprocess(sent):
 	for w in filtered_words:
 	    if len(w) >= 3 and isOnlyStr(w):
 	       f.write(w + '\n')
+	       f1.write(w + '\n')
 	f.close()
 	
 def createWordSet():
     for filename in glob.glob(os.path.join(path, '*.txt')):
         f=open(filename, 'r')
-        op=open("C:\Users\Akshay-PC\Desktop\\temp.txt",'w')
+        op=open(os.path.join(path1, 'temp.txt'),'w')
         for line in f:            
             line=line.strip().decode("ascii","ignore").encode("ascii")
             if line=="":
@@ -44,9 +46,9 @@ def createWordSet():
             op.write(line + ' ')
         op.close()
 
-        fo = open("C:\Users\Akshay-PC\Desktop\\temp.txt", "r")
+        fo = open(os.path.join(path1, 'temp.txt'), "r")
         for sent in fo:
-            preprocess(sent)
+            preprocess(sent, filename)
         fo.close()
         
 
