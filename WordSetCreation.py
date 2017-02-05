@@ -13,6 +13,13 @@ count = 0
 sw = set()
 sw = stopwords.words('english')
 
+def isOnlyStr(str):
+    for char in str:
+        if not char.isalpha():
+            return False
+            break
+    return True
+
 # Creates a Python Set containing all the words found in the documents in path excluding stop words
         
 def preprocess(sent):
@@ -22,7 +29,8 @@ def preprocess(sent):
 	tokens = tokenizer.tokenize(sent)
 	filtered_words = [w for w in tokens if not w in sw]
 	for w in filtered_words:
-	   f.write(w + '\n')
+	    if len(w) >= 3 and isOnlyStr(w):
+	       f.write(w + '\n')
 	f.close()
 	
 def createWordSet():
