@@ -65,4 +65,4 @@ def createWordSet():
     
     print "WordSet has been Generated"    
     
-#createWordSet()
+createWordSet()
