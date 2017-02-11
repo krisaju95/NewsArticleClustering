@@ -14,7 +14,7 @@ cosineSimilarityMatrix = pickle.load( open(os.path.join(path, 'KMeansClustering'
 wordSetSize = len(dataFrame3.columns)
 numberOfDocuments = len(dataFrame3.index)
 m = 1
-k = 4
+k = 6
 centroids = pd.DataFrame(np.zeros(k).reshape(k,1))
 
 # Find a pair of points having maximum cosine similarity
