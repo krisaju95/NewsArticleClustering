@@ -15,7 +15,7 @@ cosineSimilarityMatrix = pickle.load( open(os.path.join(path, 'KMeansClustering'
 wordSetSize = len(dataFrame3.columns)
 numberOfDocuments = len(dataFrame3.index)
 m = 1
-k = 4
+k = 6
 centroids = pickle.load( open(os.path.join(path, 'KMeansClustering','initialCentroids.p'), "rb" ))
 centroidCosineSimilarity = pd.DataFrame(np.zeros(numberOfDocuments).reshape(numberOfDocuments,1))
 dataFrame5 = pd.DataFrame(np.zeros(numberOfDocuments).reshape(numberOfDocuments,1))
@@ -95,7 +95,7 @@ def initializeCentroids():
 def calculateNewCentroids():
     initializeCentroids()
     clusterID = 0
-    clusterSizes = [0 , 0 , 0 , 0]
+    clusterSizes = [0 , 0 , 0 , 0, 0, 0]
     for row in dataFrame5.index:
         clusterID = dataFrame5.ix[row , "ClusterID"]
         clusterSizes[int(clusterID)] = clusterSizes[int(clusterID)] + 1
