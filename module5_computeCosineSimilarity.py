@@ -52,9 +52,14 @@ def calculateCosineSimilarity():
         print "Calculating Cosine Similarity Values for Document " , row + 1 , " of " , numberOfDocuments
         
         for column in range(numberOfDocuments):
-            
-            document2 = dataFrame3.loc[column , :]
-            dataFrame4.ix[row , column] = cosineSimilarity(document1 , document2)
+            if column < row:
+                document2 = dataFrame3.loc[column , :]
+                dataFrame4.ix[row , column] = cosineSimilarity(document1 , document2)
+                dataFrame4.ix[column , row] = dataFrame4.ix[row , column]
+            elif column == row:
+                dataFrame4.ix[row , column] = 1.0
+            elif column > row:
+                break
     
     print "Cosine Similarity Matrix generated"
     print "Saving data in DataFrame4 as a pickle package and as a CSV"
