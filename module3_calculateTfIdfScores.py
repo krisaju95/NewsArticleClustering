@@ -26,6 +26,7 @@ def calculateTfIdf():
         for word in dataFrame2.columns:
             if dataFrame2.ix[row,word] != 0:
                 dataFrame2.ix[row,word] = dataFrame2.ix[row,word] / fileWordCount
+                #dataFrame2.ix[row,word] = 1 + math.log(dataFrame2.ix[row,word]) #/ fileWordCount
     
     print "Normalisation completed"
     
