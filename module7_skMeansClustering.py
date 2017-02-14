@@ -15,12 +15,12 @@ cosineSimilarityMatrix = pickle.load( open(os.path.join(path, 'KMeansClustering'
 wordSetSize = len(dataFrame3.columns)
 numberOfDocuments = len(dataFrame3.index)
 m = 1
-k = 6
 centroids = pickle.load( open(os.path.join(path, 'KMeansClustering','initialCentroids.p'), "rb" ))
 centroidCosineSimilarity = pd.DataFrame(np.zeros(numberOfDocuments).reshape(numberOfDocuments,1))
 dataFrame5 = pd.DataFrame(np.zeros(numberOfDocuments).reshape(numberOfDocuments,1))
 clusters = []
 previousClusters = []
+k = len(centroids.index)
 
 # Check if the newly found clusters are the same as the previously found clusters
 def convergenceCase():
@@ -95,7 +95,7 @@ def initializeCentroids():
 def calculateNewCentroids():
     initializeCentroids()
     clusterID = 0
-    clusterSizes = [0 , 0 , 0 , 0, 0, 0]
+    clusterSizes = [0 , 0 , 0, 0, 0]
     for row in dataFrame5.index:
         clusterID = dataFrame5.ix[row , "ClusterID"]
         clusterSizes[int(clusterID)] = clusterSizes[int(clusterID)] + 1
@@ -150,8 +150,10 @@ def updateCentroidData():
             clusterID , newSimilarityValue = findClosestCluster(row)
             dataFrame5.ix[row , "maxSimilarityValue"] = newSimilarityValue
             dataFrame5.ix[row , "ClusterID"] = clusterID
-            
-        
+        else:
+            dataFrame5.ix[row , "maxSimilarityValue"] = centroidCosineSimilarity.ix[row , clusterID]
+
+      
 # Main function to perform clustering on the dataset 
 def skMeansClustering():
     global previousClusters
@@ -177,5 +179,12 @@ def skMeansClustering():
     print "Converged in ", i , " iteration(s)"
     print "Clusters have been generated"
 
+    print "Saving data in DataFrame5 as a pickle package and as a CSV"
+                                    
+    dataFrame5.to_pickle(os.path.join(path, 'KMeansClustering','dataFrame5.p'))
+    dataFrame5.to_csv(os.path.join(path, 'KMeansClustering','dataFrame5.csv'))
+    
+    print "DataFrame5 has been saved"
+
 skMeansClustering()
-print clusters
+#print clusters
