@@ -80,4 +80,4 @@ wordSetSize=findSetSize()
 numberOfDocuments=findNumberOfDocuments()
 findWordCounts()
 #print words
-print len(words)
+#print len(words)
