@@ -7,7 +7,7 @@ words = set()
 dataFrame2 = pickle.load( open(os.path.join(path, 'Feature Set','dataFrame2.p'), "rb" ))
 wordSetSize = len(dataFrame2.columns)
 numberOfDocuments = len(dataFrame2.index)
-TfIdf_Threshold = 0.005
+TfIdf_Threshold = 0.003
 
 
 # Creates a dataframe containing features in each document as document vectors (each row is a vector)
