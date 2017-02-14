@@ -37,7 +37,7 @@ def cosineSimilarity(value1 , value2):
 # Create a dataframe containing cosine similarity values for each document
 def calculateCosineSimilarity():
     dataFrame4 = pd.DataFrame(np.zeros(numberOfDocuments).reshape(numberOfDocuments,1))
-    
+    similarityValue = 0
     print "Initialising DataFrame4"
     # Initialise Cosine Similarity Data Frame with zeroes
     for row in range(numberOfDocuments):
@@ -54,7 +54,10 @@ def calculateCosineSimilarity():
         for column in range(numberOfDocuments):
             if column < row:
                 document2 = dataFrame3.loc[column , :]
-                dataFrame4.ix[row , column] = cosineSimilarity(document1 , document2)
+                similarityValue = cosineSimilarity(document1 , document2)
+                if similarityValue <= 0.0:
+                    similarityValue = 0.0
+                dataFrame4.ix[row , column] = similarityValue
                 dataFrame4.ix[column , row] = dataFrame4.ix[row , column]
             elif column == row:
                 dataFrame4.ix[row , column] = 1.0
