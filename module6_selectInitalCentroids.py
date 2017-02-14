@@ -6,7 +6,12 @@ import os
 
 path = "C:/Users/hp/Desktop/FINAL YEAR PROJECT/S8/"
 D = set()
-A = []
+A = [[0, 61, 70, 87, 100, 115, 128, 151, 162, 168],
+    [1, 2, 20, 42, 96, 129, 130, 173, 174, 197],
+    [46, 48, 53, 64, 93, 95, 105, 124, 159, 171],
+    [57, 60, 73, 83, 89, 117, 120, 146, 150, 175],
+    [31, 34, 39, 80, 98, 116, 131, 140, 191, 195]]
+#A = []
 words = set()
 dataFrame2 = pickle.load( open(os.path.join(path, 'Feature Set','dataFrame2.p'), "rb" ))
 dataFrame3 = pickle.load( open(os.path.join(path, 'Feature Set','dataFrame3.p'), "rb" ))
@@ -14,7 +19,7 @@ cosineSimilarityMatrix = pickle.load( open(os.path.join(path, 'KMeansClustering'
 wordSetSize = len(dataFrame3.columns)
 numberOfDocuments = len(dataFrame3.index)
 m = 1
-k = 6
+k = 5
 centroids = pd.DataFrame(np.zeros(k).reshape(k,1))
 
 # Find a pair of points having maximum cosine similarity
@@ -39,7 +44,7 @@ def findNextClosestPoints(A):
     for document in A:
         for column in cosineSimilarityMatrix.columns:
             if column in D:
-                if cosineSimilarityMatrix.ix[document , column] > mostSimilarValue:
+                if cosineSimilarityMatrix.ix[document , column] >= mostSimilarValue:
                     mostSimilarValue = cosineSimilarityMatrix.ix[document , column]
                     mostSimilarPoint = column
                     
@@ -105,8 +110,13 @@ def selectInitialCentroids():
             D.difference_update(pointSetForm)
             pointListForm = []
             pointSetForm = set()
+            #print nextClosestPoint
+            #print D
     
          
-selectInitialCentroids()
+#selectInitialCentroids()
+#initalizeSetAm()
+#initializeSetD()
+initializeCentroids()
 computeCentroidsForEachSetA()
 centroids.to_pickle(os.path.join(path, 'KMeansClustering','initialCentroids.p'))
