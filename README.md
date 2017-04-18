@@ -35,6 +35,7 @@ any further articles into the specified genres.
   if they have a score of 0 for all documents in the data set.
   The remaining words are used as the final feature set and the document vectors
   are shortened accordingly.
+  *(If you do not wish to add a threshold, set the value to 0)*
   
 ## Module 5 - Cosine Similarity:
   Calculate the cosine similarity for every pair of documents in the dataset
