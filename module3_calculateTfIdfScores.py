@@ -1,10 +1,12 @@
 import pickle
 import math
 import os
+import pandas as pd
+import numpy as np
 
 path = "C:/Users/hp/Desktop/FINAL YEAR PROJECT/S8/"
-words = set()
-dataFrame1 = pickle.load( open(os.path.join(path, 'Word Count','dataFrame1.p'), "rb" ))
+words = pickle.load(open(os.path.join(path, 'Word Set','wordSet.p'), 'rb'))
+dataFrame1 = pickle.load(open(os.path.join(path, 'Word Count','dataFrame1.p'), 'rb'))
 wordSetSize = len(dataFrame1.columns)
 numberOfDocuments = len(dataFrame1.index)
 
@@ -12,25 +14,20 @@ numberOfDocuments = len(dataFrame1.index)
 # Calculates Tf-Idf score for each word using data from the data frame
 def calculateTfIdf():
     dataFrame2=dataFrame1.copy()
+    dataFrame2Matrix = dataFrame2.as_matrix()
     
     print "Normalising Term Frequencies"
-    # Normalises Term Frequency
+    
+    # Normalises Term Frequency , Calculates total number of terms in each document and Divides term frequency by document term count (normalising)
     for row in dataFrame2.index:
-        fileWordCount = 0
-        
-        # Calculates total number of terms in each document
-        for word in dataFrame2.columns:
-            fileWordCount = fileWordCount + dataFrame2.ix[row,word]
-            
-        # Divides term frequency by document term count (normalising)
-        for word in dataFrame2.columns:
-            if dataFrame2.ix[row,word] != 0:
-                dataFrame2.ix[row,word] = dataFrame2.ix[row,word] / fileWordCount
-                #dataFrame2.ix[row,word] = 1 + math.log(dataFrame2.ix[row,word]) #/ fileWordCount
+        fileWordCount = dataFrame2Matrix[row].sum()
+        dataFrame2Matrix[row] = np.divide(dataFrame2Matrix[row] , float(fileWordCount))
+    dataFrame2 = pd.DataFrame(dataFrame2Matrix)
     
     print "Normalisation completed"
     
     print "Calculating IDF and corresponding TF-IDF values"
+    
     # Calculates document frequency for each word and multiply with TF component
     for word in dataFrame2.columns:
         wordDocumentCount = 0
@@ -43,6 +40,8 @@ def calculateTfIdf():
         else:
             dataFrame2.ix[row,word] = 0.0    
 
+    dataFrame2.columns = list(words)
+    
     print "TF-IDF Calculation completed"
     
     print "Saving data in dataFrame2 as pickle package and CSV"

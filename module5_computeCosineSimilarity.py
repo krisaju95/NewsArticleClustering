@@ -15,35 +15,29 @@ numberOfDocuments = len(dataFrame2.index)
 def cosineSimilarity(value1 , value2):
     d1 = 0
     d2 = 0
-    dot = 0
-    for row in value1.index:
-        d1 = d1 + (value1.ix[row, 0])**2
-    for row in value2.index:
-        d2 = d2 + (value2.ix[row, 0])**2
-        
-    for row in value1.index:
-        dot = dot + ( value1.ix[row, 0] * value2.ix[row, 0] )
+    dotProduct = 0
+    v1 = value1.as_matrix()
+    v2 = value2.as_matrix()
+    document1 = np.square(v1)
+    document2 = np.square(v2)
+
+    dotProduct = np.dot(v1 , v2)
     
-    d1 = math.sqrt( d1 )
-    d2 = math.sqrt( d2 )
+    d1 = math.sqrt( document1.sum() )
+    d2 = math.sqrt( document2.sum() )
     
     if d1 * d2 == 0:
         return 0
                 
-    cosineSimilarityValue = dot/(d1*d2)
+    cosineSimilarityValue = dotProduct/(d1*d2)
     return cosineSimilarityValue
     
 
 # Create a dataframe containing cosine similarity values for each document
 def calculateCosineSimilarity():
-    dataFrame4 = pd.DataFrame(np.zeros(numberOfDocuments).reshape(numberOfDocuments,1))
+    dataFrame4 = pd.DataFrame(np.zeros(shape = (numberOfDocuments , numberOfDocuments)).reshape(numberOfDocuments,numberOfDocuments))
     similarityValue = 0
-    print "Initialising DataFrame4"
-    # Initialise Cosine Similarity Data Frame with zeroes
-    for row in range(numberOfDocuments):
-        for column in range(numberOfDocuments):
-            dataFrame4.ix[row , column] = 0
-    
+
     print "Generating Cosine Similarity Matrix"
       
     for row in range(numberOfDocuments):
@@ -65,6 +59,7 @@ def calculateCosineSimilarity():
                 break
     
     print "Cosine Similarity Matrix generated"
+    
     print "Saving data in DataFrame4 as a pickle package and as a CSV"
                                     
     dataFrame4.to_pickle(os.path.join(path, 'KMeansClustering','dataFrame4.p'))

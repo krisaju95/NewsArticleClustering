@@ -16,11 +16,11 @@ wordSetSize = len(dataFrame3.columns)
 numberOfDocuments = len(dataFrame3.index)
 m = 1
 centroids = pickle.load( open(os.path.join(path, 'KMeansClustering','initialCentroids.p'), "rb" ))
-centroidCosineSimilarity = pd.DataFrame(np.zeros(numberOfDocuments).reshape(numberOfDocuments,1))
 dataFrame5 = pd.DataFrame(np.zeros(numberOfDocuments).reshape(numberOfDocuments,1))
 clusters = []
 previousClusters = []
 k = len(centroids.index)
+centroidCosineSimilarity = pd.DataFrame(np.zeros(shape = (numberOfDocuments , k)).reshape(numberOfDocuments , k))
 
 # Check if the newly found clusters are the same as the previously found clusters
 def convergenceCase():
@@ -38,22 +38,21 @@ def convergenceCase():
 def cosineSimilarity(value1 , value2):
     d1 = 0
     d2 = 0
-    dot = 0
-    for row in value1.index:
-        d1 = d1 + (value1.ix[row, 0])**2
-    for row in value2.index:
-        d2 = d2 + (value2.ix[row, 0])**2
-        
-    for row in value1.index:
-        dot = dot + ( value1.ix[row, 0] * value2.ix[row, 0] )
+    dotProduct = 0
+    v1 = value1.as_matrix()
+    v2 = value2.as_matrix()
+    document1 = np.square(v1)
+    document2 = np.square(v2)
+
+    dotProduct = np.dot(v1 , v2)
     
-    d1 = math.sqrt( d1 )
-    d2 = math.sqrt( d2 )
+    d1 = math.sqrt( document1.sum() )
+    d2 = math.sqrt( document2.sum() )
     
     if d1 * d2 == 0:
         return 0
                 
-    cosineSimilarityValue = dot/(d1*d2)
+    cosineSimilarityValue = dotProduct/(d1*d2)
     return cosineSimilarityValue
 
 
@@ -93,28 +92,28 @@ def initializeCentroids():
                                                                         
 # Find the new centroids for each cluster once the data has been updated                                                                                                                                                                                                        
 def calculateNewCentroids():
+    global centroids
     initializeCentroids()
     clusterID = 0
     clusterSizes = [0 , 0 , 0, 0, 0]
+    dataFrame3Matrix = dataFrame3.as_matrix()
+    centroidsMatrix = centroids.as_matrix()
+    centroidColumns = centroids.columns
+    
     for row in dataFrame5.index:
         clusterID = dataFrame5.ix[row , "ClusterID"]
         clusterSizes[int(clusterID)] = clusterSizes[int(clusterID)] + 1
-        for word in centroids.columns:            
-            centroids.ix[int(clusterID) , word] = centroids.ix[int(clusterID) , word] + dataFrame3.ix[row , word]
+        centroidsMatrix[int(clusterID)] = np.add(centroidsMatrix[int(clusterID)] , dataFrame3Matrix[row])
             
     for row in centroids.index:
-        for word in centroids.columns:
-            centroids.ix[row , word] = centroids.ix[row , word] / clusterSizes[row]
+        centroidsMatrix[row] = np.divide(centroidsMatrix[row] , float(clusterSizes[row]))
+        
+    centroids = pd.DataFrame(centroidsMatrix)
+    centroids.columns = centroidColumns
         
         
 # Create a dataframe with cosine similarity values for all documents with each of the centroids                                                                                                                                                                                                                                           
-def calculateCosineSimilarity():
-    # Initialise Cosine Similarity Data Frame with zeroes
-    for row in range(numberOfDocuments):
-        for column in range(k):
-            centroidCosineSimilarity.ix[row , column] = 0
-    
-    # print dataFrame3                
+def calculateCosineSimilarity():            
     for row in range(numberOfDocuments):
         document1 = dataFrame3.loc[row , :]
         for column in range(k):
@@ -163,7 +162,7 @@ def skMeansClustering():
     calculateCosineSimilarity()
     findMostSimilarCentroids()
     generateClusters()
-    for i in range(10):
+    for i in range(50):
         calculateNewCentroids()
         calculateCosineSimilarity()
         updateCentroidData()
@@ -173,10 +172,11 @@ def skMeansClustering():
             break
         else:
             print "Clustering iteration " , i + 1
-            #print centroidCosineSimilarity
-            previousClusters = list(clusters)
+        #print centroidCosineSimilarity
+        previousClusters = list(clusters)
     
     print "Converged in ", i , " iteration(s)"
+    
     print "Clusters have been generated"
 
     print "Saving data in DataFrame5 as a pickle package and as a CSV"
@@ -187,4 +187,3 @@ def skMeansClustering():
     print "DataFrame5 has been saved"
 
 skMeansClustering()
-#print clusters
