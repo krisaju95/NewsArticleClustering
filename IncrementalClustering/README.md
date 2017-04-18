@@ -51,7 +51,7 @@ crawlers over time.
   from that cluster with this new document. This is done for each cluster. These values
   are then normalised by dividing by the sizes of the respective clusters.
   An optional threshold can be set such that certain documents having very low similarity
-  with all clusters can be discarded. (Set to 0 if not required)
+  with all clusters can be discarded. *(Set to 0 if not required)*
   
 ## Module 7 - Computing Statistics:
   It returns the percentage of documents classified in each cluster, and also returns the
