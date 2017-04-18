@@ -1,16 +1,18 @@
 # News Article Clustering
 ## Final Year Project | National Institute of Technology, Calicut
-#### Arjun Krishnamoorthy & Akshay K. Patil | Comp. Science & Engg.
+#### *Arjun Krishnamoorthy & Akshay K. Patil | Comp. Science & Engg.*
 
 
-Semi-supervised learning model to categorize online news articles into genres.
+A Semi-supervised learning model to categorize online news articles into genres.
+The model creates an initial structure of clusters to be used for classifying
+any further articles into the specified genres.
 
-Modules included:
+
 ## Module 1 - Pre-Processing:
-  • Simple model:
+  - Simple model:
     Extract valid words after removal of non-ASCII characters
     
-  • Advanced Model:
+  - Advanced Model:
     Usage of NER and WordNet libraries.
     Words are tagged with their POS and then categorized into entities
     like Names, Places, Organizations etc., i.e., proper nouns and common
