@@ -18,7 +18,7 @@ originalClusters = pickle.load(open(os.path.join(path, 'KMeansClustering','dataF
 dataFrame4 = pickle.load(open(os.path.join(path , 'Crawled Articles' , newsPaperName , 'Cosine Similarity', 'dataFrame4.p'), "rb"))
 dataFrame5 = pd.DataFrame(np.zeros(numberOfDocuments).reshape(numberOfDocuments,1))
 numberOfClusters = 5
-minSimilarityThreshold = 0.01
+minSimilarityThreshold = 0.007
 
 
 # Compute cosine similarity given two documents

@@ -10,7 +10,7 @@ words = pickle.load(open(os.path.join(path, 'Word Set','wordSet.p'), 'rb'))
 dataFrame2 = pickle.load( open(os.path.join(path , 'Crawled Articles' , newsPaperName , 'Feature Set','dataFrame2.p'), "rb" ))
 wordSetSize = len(dataFrame2.columns)
 numberOfDocuments = len(dataFrame2.index)
-TfIdf_Threshold = 0.006
+TfIdf_Threshold = 0.00
 dataFrame3=dataFrame2.copy()
 oldDataFrame3 = pickle.load(open(os.path.join(path, 'Feature Set', 'dataFrame3.p'), "rb" ))
 

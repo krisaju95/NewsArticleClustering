@@ -10,12 +10,15 @@ words = pickle.load(open(os.path.join(path, 'Word Set','wordSet.p'), 'rb'))
 dataFrame1 = pickle.load( open(os.path.join(path , 'Crawled Articles' , newsPaperName , 'Word Count','dataFrame1.p'), "rb" ))
 wordSetSize = len(dataFrame1.columns)
 numberOfDocuments = len(dataFrame1.index)
+oldDataFrame2 = pickle.load(open(os.path.join(path, 'Feature Set', 'dataFrame2.p'), "rb" ))
+originalNumberOfDocuments = len(oldDataFrame2.index)
 
 
 # Calculates Tf-Idf score for each word using data from the data frame
 def calculateTfIdf():
     dataFrame2=dataFrame1.copy()
     dataFrame2Matrix = dataFrame2.as_matrix()
+    oldDataFrame2Matrix = oldDataFrame2.as_matrix()
     print "Normalising Term Frequencies"
     # Normalises Term Frequency , Calculates total number of terms in each document and Divides term frequency by document term count (normalising)
     for row in dataFrame2.index:
@@ -26,19 +29,19 @@ def calculateTfIdf():
     print "Normalisation completed"
     
     print "Calculating IDF and corresponding TF-IDF values"
+    
     # Calculates document frequency for each word and multiply with TF component
-    for word in dataFrame2.columns:
+    for word in range(len(dataFrame2.columns)):
         wordDocumentCount = 0
-        for row in dataFrame2.index:
-            if dataFrame2.ix[row,word] != 0:
-                wordDocumentCount = wordDocumentCount +1
+        idfValue = 0
+        wordDocumentCount = np.count_nonzero(oldDataFrame2Matrix[:,word])
         if wordDocumentCount != 0:
-            dataFrame2.ix[row,word] = dataFrame2.ix[row,word] * math.log(numberOfDocuments / wordDocumentCount)
+            idfValue = math.log(originalNumberOfDocuments / wordDocumentCount)
+        dataFrame2Matrix[:,word] = np.multiply(dataFrame2Matrix[:,word] , idfValue)
 
-        else:
-            dataFrame2.ix[row,word] = 0.0    
-
+    dataFrame2 = pd.DataFrame(dataFrame2Matrix)
     dataFrame2.columns = list(words)
+    
     print "TF-IDF Calculation completed"
     
     print "Saving data in dataFrame2 as pickle package and CSV"
