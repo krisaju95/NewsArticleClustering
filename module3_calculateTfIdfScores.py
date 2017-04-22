@@ -22,24 +22,22 @@ def calculateTfIdf():
     for row in dataFrame2.index:
         fileWordCount = dataFrame2Matrix[row].sum()
         dataFrame2Matrix[row] = np.divide(dataFrame2Matrix[row] , float(fileWordCount))
-    dataFrame2 = pd.DataFrame(dataFrame2Matrix)
+    #dataFrame2 = pd.DataFrame(dataFrame2Matrix)
     
     print "Normalisation completed"
     
     print "Calculating IDF and corresponding TF-IDF values"
     
     # Calculates document frequency for each word and multiply with TF component
-    for word in dataFrame2.columns:
+    for word in range(len(dataFrame2.columns)):
         wordDocumentCount = 0
-        for row in dataFrame2.index:
-            if dataFrame2.ix[row,word] != 0:
-                wordDocumentCount = wordDocumentCount +1
+        idfValue = 0
+        wordDocumentCount = np.count_nonzero(dataFrame2Matrix[:,word])
         if wordDocumentCount != 0:
-            dataFrame2.ix[row,word] = dataFrame2.ix[row,word] * math.log(numberOfDocuments / wordDocumentCount)
+            idfValue = math.log(numberOfDocuments / wordDocumentCount)
+        dataFrame2Matrix[:,word] = np.multiply(dataFrame2Matrix[:,word] , idfValue)
 
-        else:
-            dataFrame2.ix[row,word] = 0.0    
-
+    dataFrame2 = pd.DataFrame(dataFrame2Matrix)
     dataFrame2.columns = list(words)
     
     print "TF-IDF Calculation completed"
