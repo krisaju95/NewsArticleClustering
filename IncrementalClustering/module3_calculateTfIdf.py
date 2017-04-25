@@ -36,7 +36,7 @@ def calculateTfIdf():
         idfValue = 0
         wordDocumentCount = np.count_nonzero(oldDataFrame2Matrix[:,word])
         if wordDocumentCount != 0:
-            idfValue = math.log(originalNumberOfDocuments / wordDocumentCount)
+            idfValue = math.log(originalNumberOfDocuments / (wordDocumentCount + 1))
         dataFrame2Matrix[:,word] = np.multiply(dataFrame2Matrix[:,word] , idfValue)
 
     dataFrame2 = pd.DataFrame(dataFrame2Matrix)
